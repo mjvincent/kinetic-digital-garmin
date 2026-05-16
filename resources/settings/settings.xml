@@ -1,0 +1,35 @@
+<settings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://developer.garmin.com/downloads/connect-iq/resources.xsd">
+    <setting propertyKey="@Properties.UnlockCode" title="@Strings.UnlockCodeTitle">
+        <settingConfig type="alphaNumeric" />
+    </setting>
+
+    <setting propertyKey="@Properties.AccentColor" title="@Strings.AccentColorTitle">
+        <settingConfig type="list">
+            <listEntry value="0xC9A45D">@Strings.ColorGilt</listEntry>
+            <listEntry value="0x2DD4BF">@Strings.ColorTeal</listEntry>
+            <listEntry value="0xF43F5E">@Strings.ColorRuby</listEntry>
+            <listEntry value="0x60A5FA">@Strings.ColorSteelBlue</listEntry>
+            <listEntry value="0xE5E7EB">@Strings.ColorSilver</listEntry>
+        </settingConfig>
+    </setting>
+
+    <setting propertyKey="@Properties.SecondHandEnabled" title="@Strings.SecondHandTitle">
+        <settingConfig type="boolean" />
+    </setting>
+
+    <setting propertyKey="@Properties.SkeletonDetailLevel" title="@Strings.DetailLevelTitle">
+        <settingConfig type="list">
+            <listEntry value="0">@Strings.DetailBase</listEntry>
+            <listEntry value="1">@Strings.DetailBalanced</listEntry>
+            <listEntry value="2">@Strings.DetailRich</listEntry>
+        </settingConfig>
+    </setting>
+
+    <setting propertyKey="@Properties.ShowBattery" title="@Strings.ShowBatteryTitle">
+        <settingConfig type="boolean" />
+    </setting>
+
+    <setting propertyKey="@Properties.ShowDate" title="@Strings.ShowDateTitle">
+        <settingConfig type="boolean" />
+    </setting>
+</settings>
