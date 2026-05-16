@@ -53,19 +53,18 @@ class KineticDigitalView extends WatchUi.WatchFace {
         drawDateHeader(dc, cx, cy, radius, accent);
         drawTime(dc, cx, cy, radius);
         drawStats(dc, cx, cy, radius, accent, unlocked);
-        drawUnlockHint(dc, cx, cy, radius, unlocked);
     }
 
     private function drawOuterProgress(dc as Dc, cx as Number, cy as Number, radius as Number, accent as Number) as Void {
-        var ring = radius - scale(radius, 8);
+        var ring = radius - scale(radius, 2);
         var stats = System.getSystemStats();
         var battery = stats.battery;
         var batteryAngle = ((battery / 100.0) * 360).toNumber();
 
-        dc.setColor(0x111821, 0x111821);
-        dc.fillCircle(cx, cy, radius - scale(radius, 28));
+        dc.setColor(0x101722, 0x101722);
+        dc.fillCircle(cx, cy, radius - scale(radius, 18));
 
-        dc.setPenWidth(scale(radius, 4));
+        dc.setPenWidth(scale(radius, 5));
         dc.setColor(0x263241, Graphics.COLOR_TRANSPARENT);
         dc.drawArc(cx, cy, ring, Graphics.ARC_COUNTER_CLOCKWISE, 0, 360);
         dc.setColor(accent, Graphics.COLOR_TRANSPARENT);
@@ -74,33 +73,21 @@ class KineticDigitalView extends WatchUi.WatchFace {
         dc.setPenWidth(scale(radius, 2));
         dc.setColor(0x526173, Graphics.COLOR_TRANSPARENT);
         for (var i = 0; i < 60; i += 5) {
-            drawRadialLine(dc, cx, cy, (i * 6).toFloat(), radius - scale(radius, 26), radius - scale(radius, 18));
+            drawRadialLine(dc, cx, cy, (i * 6).toFloat(), radius - scale(radius, 21), radius - scale(radius, 13));
         }
     }
 
     private function drawSubtleMechanics(dc as Dc, cx as Number, cy as Number, radius as Number, accent as Number, unlocked as Boolean) as Void {
         dc.setPenWidth(scale(radius, 1));
         dc.setColor(0x263444, Graphics.COLOR_TRANSPARENT);
-        dc.drawLine(cx - scale(radius, 118), cy - scale(radius, 3), cx + scale(radius, 118), cy - scale(radius, 3));
-        dc.drawLine(cx - scale(radius, 84), cy + scale(radius, 75), cx + scale(radius, 84), cy + scale(radius, 75));
-        dc.drawCircle(cx - scale(radius, 106), cy - scale(radius, 3), scale(radius, 4));
-        dc.drawCircle(cx + scale(radius, 106), cy - scale(radius, 3), scale(radius, 4));
-
-        dc.setPenWidth(scale(radius, 3));
-        dc.setColor(0x3A4553, Graphics.COLOR_TRANSPARENT);
-        dc.drawLine(cx + scale(radius, 54), cy - scale(radius, 84), cx + scale(radius, 104), cy - scale(radius, 70));
-        dc.drawLine(cx + scale(radius, 49), cy - scale(radius, 62), cx + scale(radius, 108), cy - scale(radius, 44));
-        dc.drawLine(cx + scale(radius, 44), cy - scale(radius, 40), cx + scale(radius, 99), cy - scale(radius, 24));
-
-        dc.setColor(accent, accent);
-        dc.fillCircle(cx + scale(radius, 70), cy - scale(radius, 78), scale(radius, 4));
-        dc.fillCircle(cx + scale(radius, 87), cy - scale(radius, 48), scale(radius, 4));
+        dc.drawLine(cx - scale(radius, 104), cy + scale(radius, 71), cx + scale(radius, 104), cy + scale(radius, 71));
+        dc.drawCircle(cx - scale(radius, 104), cy + scale(radius, 71), scale(radius, 3));
+        dc.drawCircle(cx + scale(radius, 104), cy + scale(radius, 71), scale(radius, 3));
 
         if (unlocked) {
             dc.setPenWidth(scale(radius, 2));
             dc.setColor(accent, Graphics.COLOR_TRANSPARENT);
-            dc.drawCircle(cx + scale(radius, 92), cy + scale(radius, 63), scale(radius, 24));
-            dc.drawCircle(cx + scale(radius, 92), cy + scale(radius, 63), scale(radius, 12));
+            dc.drawCircle(cx + scale(radius, 106), cy + scale(radius, 94), scale(radius, 15));
         }
     }
 
@@ -110,11 +97,11 @@ class KineticDigitalView extends WatchUi.WatchFace {
         var dateText = Lang.format("$1$  $2$ $3$", [dayName(shortInfo.day_of_week), medium.month, medium.day.format("%02d")]);
 
         dc.setColor(0xAAB4C2, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, cy - scale(radius, 124), Graphics.FONT_SMALL, dateText, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, cy - scale(radius, 133), Graphics.FONT_SMALL, dateText, Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setPenWidth(scale(radius, 2));
         dc.setColor(accent, Graphics.COLOR_TRANSPARENT);
-        dc.drawLine(cx - scale(radius, 48), cy - scale(radius, 96), cx + scale(radius, 48), cy - scale(radius, 96));
+        dc.drawLine(cx - scale(radius, 42), cy - scale(radius, 105), cx + scale(radius, 42), cy - scale(radius, 105));
     }
 
     private function drawTime(dc as Dc, cx as Number, cy as Number, radius as Number) as Void {
@@ -134,7 +121,7 @@ class KineticDigitalView extends WatchUi.WatchFace {
 
         var timeString = Lang.format(timeFormat, [hours.format("%02d"), clock.min.format("%02d")]);
         dc.setColor(0xF4F7FB, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, cy - scale(radius, 61), Graphics.FONT_NUMBER_HOT, timeString, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, cy - scale(radius, 52), Graphics.FONT_NUMBER_HOT, timeString, Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     private function drawStats(dc as Dc, cx as Number, cy as Number, radius as Number, accent as Number, unlocked as Boolean) as Void {
@@ -143,39 +130,36 @@ class KineticDigitalView extends WatchUi.WatchFace {
         var clock = System.getClockTime();
         var dayPct = ((((clock.hour * 60) + clock.min) / 1440.0) * 100).toNumber().format("%d") + "%";
 
-        drawStat(dc, cx - scale(radius, 76), cy + scale(radius, 75), "BAT", battery, accent);
-        drawStat(dc, cx, cy + scale(radius, 75), "DAY", dayPct, 0x81B3D7);
+        drawStat(dc, cx - scale(radius, 76), cy + scale(radius, 73), "BAT", battery, accent);
+        drawStat(dc, cx, cy + scale(radius, 73), "DAY", dayPct, 0x81B3D7);
 
         if (unlocked) {
-            drawStat(dc, cx + scale(radius, 76), cy + scale(radius, 75), "SEC", clock.sec.format("%02d"), accent);
+            drawStat(dc, cx + scale(radius, 76), cy + scale(radius, 73), "SEC", clock.sec.format("%02d"), accent);
         } else {
-            drawStat(dc, cx + scale(radius, 76), cy + scale(radius, 75), "PRO", "--", 0x687586);
+            drawStat(dc, cx + scale(radius, 76), cy + scale(radius, 73), "PRO", "OFF", 0x687586);
         }
 
         var steps = getStepsText();
         dc.setColor(0xB4BECA, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, cy + scale(radius, 121), Graphics.FONT_XTINY, steps, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, cy + scale(radius, 120), Graphics.FONT_XTINY, steps, Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     private function drawStat(dc as Dc, x as Number, y as Number, label as String, value as String, color as Number) as Void {
-        dc.setColor(0x101720, 0x101720);
-        dc.fillCircle(x, y, 31);
+        var halfW = 31;
+        var halfH = 24;
+
+        dc.setColor(0x0C121A, 0x0C121A);
+        dc.fillRectangle(x - halfW, y - halfH, halfW * 2, halfH * 2);
+        dc.fillCircle(x - halfW, y, halfH);
+        dc.fillCircle(x + halfW, y, halfH);
         dc.setPenWidth(2);
         dc.setColor(color, Graphics.COLOR_TRANSPARENT);
-        dc.drawCircle(x, y, 31);
+        dc.drawLine(x - halfW, y - halfH, x + halfW, y - halfH);
+        dc.drawLine(x - halfW, y + halfH, x + halfW, y + halfH);
         dc.setColor(0xF4F7FB, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(x, y - 22, Graphics.FONT_XTINY, value, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(x, y - 23, Graphics.FONT_XTINY, value, Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x7E8998, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(x, y - 2, Graphics.FONT_XTINY, label, Graphics.TEXT_JUSTIFY_CENTER);
-    }
-
-    private function drawUnlockHint(dc as Dc, cx as Number, cy as Number, radius as Number, unlocked as Boolean) as Void {
-        if (unlocked) {
-            return;
-        }
-
-        dc.setColor(0x667284, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, cy + scale(radius, 151), Graphics.FONT_XTINY, "UNLOCK FOR SECONDS + COLORS", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(x, y - 4, Graphics.FONT_XTINY, label, Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     private function getStepsText() as String {
