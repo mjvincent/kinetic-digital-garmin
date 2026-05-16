@@ -49,14 +49,13 @@ class SkeletonAutomaticView extends WatchUi.WatchFace {
         var radius = minNumber(w, h) / 2;
         var unlocked = isUnlocked();
         var accent = getAccentColor(unlocked);
-        var detailLevel = unlocked ? getNumber("SkeletonDetailLevel", 2) : 0;
+        var detailLevel = unlocked ? getNumber("SkeletonDetailLevel", 2) : 1;
 
         if (fullRedraw) {
             dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
             dc.clear();
             drawSkeletonDial(dc, cx, cy, radius, accent, detailLevel, unlocked);
             drawTicks(dc, cx, cy, radius, accent);
-            drawOptionalInfo(dc, cx, cy, radius, accent, unlocked);
         }
 
         drawHands(dc, cx, cy, radius, accent, unlocked);
@@ -83,8 +82,8 @@ class SkeletonAutomaticView extends WatchUi.WatchFace {
         dc.drawCircle(cx, cy, chapter);
 
         drawMovementPlate(dc, cx, cy, radius, accent, detailLevel);
-        drawSubDial(dc, cx, cy - scale(radius, 70), scale(radius, 34), accent, "90", "10");
-        drawSubDial(dc, cx + scale(radius, 30), cy + scale(radius, 63), scale(radius, 32), accent, "65", "85");
+        drawSubDial(dc, cx, cy - scale(radius, 70), scale(radius, 34), accent, 205.0);
+        drawSubDial(dc, cx + scale(radius, 30), cy + scale(radius, 63), scale(radius, 32), accent, 232.0);
         drawDateDisc(dc, cx - scale(radius, 74), cy + scale(radius, 64), scale(radius, 29), unlocked);
 
         dc.setPenWidth(scale(radius, 5));
@@ -96,21 +95,14 @@ class SkeletonAutomaticView extends WatchUi.WatchFace {
         drawGear(dc, cx + scale(radius, 64), cy + scale(radius, 25), scale(radius, 26), 13, 0x626B77);
         drawOpenHeart(dc, cx + scale(radius, 67), cy + scale(radius, 64), scale(radius, 31), accent, detailLevel);
 
-        if (detailLevel > 0) {
-            drawRightBridgework(dc, cx, cy, radius, accent);
-            drawGear(dc, cx - scale(radius, 58), cy - scale(radius, 30), scale(radius, 19), 10, 0x4F5966);
-        }
+        drawRightBridgework(dc, cx, cy, radius, accent);
+        drawGear(dc, cx - scale(radius, 58), cy - scale(radius, 30), scale(radius, 19), 10, 0x4F5966);
 
         if (detailLevel > 1) {
             drawJewels(dc, cx, cy, radius, accent);
         }
 
         drawStatusBadge(dc, cx - scale(radius, 73), cy - scale(radius, 50), scale(radius, 18), unlocked);
-
-        if (!unlocked) {
-            dc.setColor(0x7E8794, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, cy + scale(radius, 100), Graphics.FONT_XTINY, "BASE", Graphics.TEXT_JUSTIFY_CENTER);
-        }
     }
 
     private function drawTicks(dc as Dc, cx as Number, cy as Number, radius as Number, accent as Number) as Void {
@@ -209,7 +201,7 @@ class SkeletonAutomaticView extends WatchUi.WatchFace {
         dc.drawCircle(cx + scale(radius, 56), cy - scale(radius, 4), scale(radius, 43));
     }
 
-    private function drawSubDial(dc as Dc, cx as Number, cy as Number, r as Number, accent as Number, leftLabel as String, rightLabel as String) as Void {
+    private function drawSubDial(dc as Dc, cx as Number, cy as Number, r as Number, accent as Number, handAngle as Float) as Void {
         dc.setColor(0x20252C, 0x20252C);
         dc.fillCircle(cx, cy, r);
         dc.setPenWidth(scale(r, 2));
@@ -218,18 +210,22 @@ class SkeletonAutomaticView extends WatchUi.WatchFace {
         dc.setColor(accent, Graphics.COLOR_TRANSPARENT);
         dc.drawCircle(cx, cy, r - scale(r, 6));
 
+        for (var i = 0; i < 8; i++) {
+            dc.setPenWidth(scale(r, 1));
+            dc.setColor(0x9EA7B3, Graphics.COLOR_TRANSPARENT);
+            drawRadialLine(dc, cx, cy, (i * 45).toFloat(), r - scale(r, 9), r - scale(r, 5));
+        }
+
         dc.setPenWidth(scale(r, 2));
         dc.setColor(0xB8C0CB, Graphics.COLOR_TRANSPARENT);
-        drawRadialLine(dc, cx, cy, 205.0, 0, r - scale(r, 9));
-        dc.setColor(0xAEB6C2, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx - scale(r, 15), cy - scale(r, 16), Graphics.FONT_XTINY, leftLabel, Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(cx + scale(r, 16), cy - scale(r, 16), Graphics.FONT_XTINY, rightLabel, Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(cx, cy + scale(r, 8), Graphics.FONT_XTINY, "50", Graphics.TEXT_JUSTIFY_CENTER);
+        drawRadialLine(dc, cx, cy, handAngle, 0, r - scale(r, 10));
+        dc.setColor(accent, accent);
+        dc.fillCircle(cx, cy, scale(r, 4));
     }
 
     private function drawDateDisc(dc as Dc, cx as Number, cy as Number, r as Number, unlocked as Boolean) as Void {
         var today = Gregorian.info(Time.now(), Time.FORMAT_SHORT);
-        var text = unlocked && getBool("ShowDate", true) ? today.day.format("%d") : "--";
+        var text = today.day.format("%d");
 
         dc.setColor(0x2B3038, 0x2B3038);
         dc.fillCircle(cx, cy, r);
@@ -243,8 +239,11 @@ class SkeletonAutomaticView extends WatchUi.WatchFace {
     private function drawStatusBadge(dc as Dc, cx as Number, cy as Number, r as Number, unlocked as Boolean) as Void {
         dc.setColor(0x303740, 0x303740);
         dc.fillCircle(cx, cy, r);
+        dc.setPenWidth(scale(r, 2));
         dc.setColor(0xC8CED7, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, cy - scale(r, 10), Graphics.FONT_XTINY, unlocked ? "BT" : "LK", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawCircle(cx, cy, r - scale(r, 5));
+        dc.drawLine(cx - scale(r, 6), cy, cx + scale(r, 6), cy);
+        dc.drawLine(cx, cy - scale(r, 6), cx, cy + scale(r, 6));
     }
 
     private function drawRightBridgework(dc as Dc, cx as Number, cy as Number, radius as Number, accent as Number) as Void {
