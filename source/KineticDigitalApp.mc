@@ -2,7 +2,7 @@ import Toybox.Application;
 import Toybox.Lang;
 import Toybox.WatchUi;
 
-class SkeletonAutomaticApp extends Application.AppBase {
+class KineticDigitalApp extends Application.AppBase {
 
     function initialize() {
         AppBase.initialize();
@@ -15,7 +15,7 @@ class SkeletonAutomaticApp extends Application.AppBase {
     }
 
     function getInitialView() as [Views] or [Views, InputDelegates] {
-        return [ new SkeletonAutomaticView() ];
+        return [ new KineticDigitalView() ];
     }
 
     function onSettingsChanged() as Void {
@@ -24,6 +24,6 @@ class SkeletonAutomaticApp extends Application.AppBase {
 
 }
 
-function getApp() as SkeletonAutomaticApp {
-    return Application.getApp() as SkeletonAutomaticApp;
+function getApp() as KineticDigitalApp {
+    return Application.getApp() as KineticDigitalApp;
 }

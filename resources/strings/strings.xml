@@ -1,17 +1,10 @@
 <strings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://developer.garmin.com/downloads/connect-iq/resources.xsd">
-    <string id="AppName">Skeleton Automatic</string>
+    <string id="AppName">Kinetic Digital</string>
     <string id="UnlockCodeTitle">Unlock Code</string>
     <string id="AccentColorTitle">Accent Color</string>
-    <string id="SecondHandTitle">Second Hand</string>
-    <string id="DetailLevelTitle">Skeleton Detail</string>
-    <string id="ShowBatteryTitle">Show Battery</string>
-    <string id="ShowDateTitle">Show Date</string>
+    <string id="MilitaryFormatTitle">Military Format</string>
     <string id="ColorGilt">Gilt</string>
     <string id="ColorTeal">Teal</string>
+    <string id="ColorBlue">Blue</string>
     <string id="ColorRuby">Ruby</string>
-    <string id="ColorSteelBlue">Steel Blue</string>
-    <string id="ColorSilver">Silver</string>
-    <string id="DetailBase">Base</string>
-    <string id="DetailBalanced">Balanced</string>
-    <string id="DetailRich">Rich</string>
 </strings>

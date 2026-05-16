@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <iq:manifest version="3" xmlns:iq="http://www.garmin.com/xml/connectiq">
-    <iq:application id="b2c75185-327d-4118-aa1c-c2a12b1d71ca" type="watchface" name="@Strings.AppName" entry="SkeletonAutomaticApp" launcherIcon="@Drawables.LauncherIcon" minApiLevel="6.0.0">
+    <iq:application id="7ad912fe-5175-44b0-9e4a-e827d6f9d64b" type="watchface" name="@Strings.AppName" entry="KineticDigitalApp" launcherIcon="@Drawables.LauncherIcon" minApiLevel="6.0.0">
         <iq:products>
             <iq:product id="d2mach2pro"/>
             <iq:product id="enduro3"/>
