@@ -48,18 +48,15 @@ class KineticDigitalView extends WatchUi.WatchFace {
         dc.setColor(0x07090D, 0x07090D);
         dc.clear();
 
-        drawOuterProgress(dc, cx, cy, radius, accent);
-        drawSubtleMechanics(dc, cx, cy, radius, accent, unlocked);
+        drawOuterProgress(dc, cx, cy, radius, accent, unlocked);
         drawDateHeader(dc, cx, cy, radius, accent);
         drawTime(dc, cx, cy, radius);
         drawStats(dc, cx, cy, radius, accent, unlocked);
     }
 
-    private function drawOuterProgress(dc as Dc, cx as Number, cy as Number, radius as Number, accent as Number) as Void {
+    private function drawOuterProgress(dc as Dc, cx as Number, cy as Number, radius as Number, accent as Number, unlocked as Boolean) as Void {
         var ring = radius - scale(radius, 2);
-        var stats = System.getSystemStats();
-        var battery = stats.battery;
-        var batteryAngle = ((battery / 100.0) * 360).toNumber();
+        var progressAngle = (getRingProgress(unlocked) * 360.0).toNumber();
 
         dc.setColor(0x101722, 0x101722);
         dc.fillCircle(cx, cy, radius - scale(radius, 18));
@@ -68,26 +65,12 @@ class KineticDigitalView extends WatchUi.WatchFace {
         dc.setColor(0x263241, Graphics.COLOR_TRANSPARENT);
         dc.drawArc(cx, cy, ring, Graphics.ARC_COUNTER_CLOCKWISE, 0, 360);
         dc.setColor(accent, Graphics.COLOR_TRANSPARENT);
-        dc.drawArc(cx, cy, ring, Graphics.ARC_COUNTER_CLOCKWISE, 270, 270 + batteryAngle);
+        dc.drawArc(cx, cy, ring, Graphics.ARC_COUNTER_CLOCKWISE, 270, 270 + progressAngle);
 
         dc.setPenWidth(scale(radius, 2));
         dc.setColor(0x526173, Graphics.COLOR_TRANSPARENT);
         for (var i = 0; i < 60; i += 5) {
             drawRadialLine(dc, cx, cy, (i * 6).toFloat(), radius - scale(radius, 21), radius - scale(radius, 13));
-        }
-    }
-
-    private function drawSubtleMechanics(dc as Dc, cx as Number, cy as Number, radius as Number, accent as Number, unlocked as Boolean) as Void {
-        dc.setPenWidth(scale(radius, 1));
-        dc.setColor(0x263444, Graphics.COLOR_TRANSPARENT);
-        dc.drawLine(cx - scale(radius, 104), cy + scale(radius, 71), cx + scale(radius, 104), cy + scale(radius, 71));
-        dc.drawCircle(cx - scale(radius, 104), cy + scale(radius, 71), scale(radius, 3));
-        dc.drawCircle(cx + scale(radius, 104), cy + scale(radius, 71), scale(radius, 3));
-
-        if (unlocked) {
-            dc.setPenWidth(scale(radius, 2));
-            dc.setColor(accent, Graphics.COLOR_TRANSPARENT);
-            dc.drawCircle(cx + scale(radius, 106), cy + scale(radius, 94), scale(radius, 15));
         }
     }
 
@@ -97,11 +80,11 @@ class KineticDigitalView extends WatchUi.WatchFace {
         var dateText = Lang.format("$1$  $2$ $3$", [dayName(shortInfo.day_of_week), medium.month, medium.day.format("%02d")]);
 
         dc.setColor(0xAAB4C2, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, cy - scale(radius, 133), Graphics.FONT_SMALL, dateText, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, cy - scale(radius, 139), Graphics.FONT_SMALL, dateText, Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setPenWidth(scale(radius, 2));
         dc.setColor(accent, Graphics.COLOR_TRANSPARENT);
-        dc.drawLine(cx - scale(radius, 42), cy - scale(radius, 105), cx + scale(radius, 42), cy - scale(radius, 105));
+        dc.drawLine(cx - scale(radius, 80), cy - scale(radius, 84), cx + scale(radius, 80), cy - scale(radius, 84));
     }
 
     private function drawTime(dc as Dc, cx as Number, cy as Number, radius as Number) as Void {
@@ -121,45 +104,46 @@ class KineticDigitalView extends WatchUi.WatchFace {
 
         var timeString = Lang.format(timeFormat, [hours.format("%02d"), clock.min.format("%02d")]);
         dc.setColor(0xF4F7FB, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, cy - scale(radius, 52), Graphics.FONT_NUMBER_HOT, timeString, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, cy - scale(radius, 62), Graphics.FONT_NUMBER_HOT, timeString, Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     private function drawStats(dc as Dc, cx as Number, cy as Number, radius as Number, accent as Number, unlocked as Boolean) as Void {
         var stats = System.getSystemStats();
         var battery = stats.battery.format("%d") + "%";
         var clock = System.getClockTime();
-        var dayPct = ((((clock.hour * 60) + clock.min) / 1440.0) * 100).toNumber().format("%d") + "%";
+        var activeMinutes = getActiveMinutesText();
 
-        drawStat(dc, cx - scale(radius, 76), cy + scale(radius, 73), "BAT", battery, accent);
-        drawStat(dc, cx, cy + scale(radius, 73), "DAY", dayPct, 0x81B3D7);
+        var statsY = cy + scale(radius, 108);
+        drawStat(dc, cx - scale(radius, 92), statsY, radius, "BAT", battery, accent);
+        drawStat(dc, cx, statsY, radius, "ACT", activeMinutes, 0x81B3D7);
 
         if (unlocked) {
-            drawStat(dc, cx + scale(radius, 76), cy + scale(radius, 73), "SEC", clock.sec.format("%02d"), accent);
+            var proStat = getNumber("ProStat", 0);
+            drawStat(dc, cx + scale(radius, 92), statsY, radius, getProStatLabel(proStat), getProStatValue(proStat), accent);
         } else {
-            drawStat(dc, cx + scale(radius, 76), cy + scale(radius, 73), "PRO", "OFF", 0x687586);
+            drawStat(dc, cx + scale(radius, 92), statsY, radius, "PRO", "--", 0x687586);
         }
 
         var steps = getStepsText();
         dc.setColor(0xB4BECA, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, cy + scale(radius, 120), Graphics.FONT_XTINY, steps, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, cy + scale(radius, 159), Graphics.FONT_XTINY, steps, Graphics.TEXT_JUSTIFY_CENTER);
     }
 
-    private function drawStat(dc as Dc, x as Number, y as Number, label as String, value as String, color as Number) as Void {
-        var halfW = 31;
-        var halfH = 24;
+    private function drawStat(dc as Dc, x as Number, y as Number, radius as Number, label as String, value as String, color as Number) as Void {
+        var halfW = scale(radius, 18);
+        var halfH = scale(radius, 24);
 
         dc.setColor(0x0C121A, 0x0C121A);
         dc.fillRectangle(x - halfW, y - halfH, halfW * 2, halfH * 2);
         dc.fillCircle(x - halfW, y, halfH);
         dc.fillCircle(x + halfW, y, halfH);
-        dc.setPenWidth(2);
+        dc.setPenWidth(scale(radius, 2));
         dc.setColor(color, Graphics.COLOR_TRANSPARENT);
-        dc.drawLine(x - halfW, y - halfH, x + halfW, y - halfH);
-        dc.drawLine(x - halfW, y + halfH, x + halfW, y + halfH);
+        dc.drawLine(x - scale(radius, 14), y - scale(radius, 17), x + scale(radius, 14), y - scale(radius, 17));
         dc.setColor(0xF4F7FB, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(x, y - 23, Graphics.FONT_XTINY, value, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(x, y - scale(radius, 13), Graphics.FONT_XTINY, value, Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x7E8998, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(x, y - 4, Graphics.FONT_XTINY, label, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(x, y + scale(radius, 11), Graphics.FONT_XTINY, label, Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     private function getStepsText() as String {
@@ -168,6 +152,110 @@ class KineticDigitalView extends WatchUi.WatchFace {
             return "STEPS " + formatCompact(info.steps);
         }
         return "STEPS --";
+    }
+
+    private function getActiveMinutesText() as String {
+        var activeMinutes = getActiveMinutes();
+        if (activeMinutes != null) {
+            return activeMinutes.format("%d") + "m";
+        }
+        return "--";
+    }
+
+    private function getActiveMinutes() as Number? {
+        var info = ActivityMonitor.getInfo();
+        if (info != null && info.activeMinutesDay != null) {
+            var minutes = info.activeMinutesDay;
+            return minutes.moderate + minutes.vigorous;
+        }
+        return null;
+    }
+
+    private function getProStatLabel(mode as Number) as String {
+        switch (mode) {
+            case 1:
+                return "STP";
+            case 2:
+                return "ACT";
+            case 3:
+                return "CAL";
+            case 4:
+                return "FLR";
+            case 5:
+                return "BAT";
+        }
+        return "SEC";
+    }
+
+    private function getProStatValue(mode as Number) as String {
+        var info = ActivityMonitor.getInfo();
+        var stats = System.getSystemStats();
+        var clock = System.getClockTime();
+
+        switch (mode) {
+            case 1:
+                return (info != null && info.steps != null) ? formatCompact(info.steps) : "--";
+            case 2:
+                return getActiveMinutesText();
+            case 3:
+                return (info != null && info.calories != null) ? formatCompact(info.calories) : "--";
+            case 4:
+                return (info != null && info.floorsClimbed != null) ? info.floorsClimbed.format("%d") : "--";
+            case 5:
+                return stats.battery.format("%d") + "%";
+        }
+        return clock.sec.format("%02d");
+    }
+
+    private function getRingProgress(unlocked as Boolean) as Float {
+        if (!unlocked) {
+            return getBatteryProgress();
+        }
+
+        switch (getNumber("RingMode", 0)) {
+            case 1:
+                return getStepsProgress();
+            case 2:
+                return getActiveMinutesProgress();
+            case 3:
+                return getDayProgress();
+        }
+        return getBatteryProgress();
+    }
+
+    private function getBatteryProgress() as Float {
+        return clampProgress(System.getSystemStats().battery / 100.0);
+    }
+
+    private function getStepsProgress() as Float {
+        var info = ActivityMonitor.getInfo();
+        if (info != null && info.steps != null && info.stepGoal != null && info.stepGoal > 0) {
+            return clampProgress(info.steps / info.stepGoal.toFloat());
+        }
+        return 0.0;
+    }
+
+    private function getActiveMinutesProgress() as Float {
+        var activeMinutes = getActiveMinutes();
+        if (activeMinutes != null) {
+            return clampProgress(activeMinutes / 60.0);
+        }
+        return 0.0;
+    }
+
+    private function getDayProgress() as Float {
+        var clock = System.getClockTime();
+        return clampProgress(((clock.hour * 60) + clock.min) / 1440.0);
+    }
+
+    private function clampProgress(value as Float) as Float {
+        if (value < 0.0) {
+            return 0.0;
+        }
+        if (value > 1.0) {
+            return 1.0;
+        }
+        return value;
     }
 
     private function formatCompact(value as Number) as String {
@@ -208,7 +296,56 @@ class KineticDigitalView extends WatchUi.WatchFace {
 
     private function isUnlocked() as Boolean {
         var code = getString("UnlockCode", "");
-        return code.equals("KINETIC-2026") || code.equals("PRO-2026") || code.equals("MJVDIGITAL");
+        var normalizedCode = normalizeUnlockCode(code);
+
+        if (normalizedCode.equals(normalizeUnlockCode("KINETIC-2026")) || normalizedCode.equals(normalizeUnlockCode("PRO-2026")) || normalizedCode.equals(normalizeUnlockCode("MJVDIGITAL"))) {
+            return true;
+        }
+
+        var email = normalizeEmail(getString("UnlockEmail", ""));
+        if (email.length() == 0) {
+            return false;
+        }
+
+        return normalizedCode.equals(normalizeUnlockCode(generateUnlockCode(email)));
+    }
+
+    private function generateUnlockCode(email as String) as String {
+        var bytes = (email + "|KINETIC-DIGITAL-PRO-2026").toUtf8Array();
+        var primary = 0x4B44;
+
+        for (var i = 0; i < bytes.size(); i++) {
+            primary = ((primary * 33) + bytes[i]) % 65536;
+        }
+
+        var secondary = ((primary ^ ((email.length() * 257) % 65536)) + 0x2026) % 65536;
+        return "KD-" + primary.format("%04X") + "-" + secondary.format("%04X");
+    }
+
+    private function normalizeEmail(email as String) as String {
+        var bytes = email.toLower().toUtf8Array();
+        var normalized = "";
+
+        for (var i = 0; i < bytes.size(); i++) {
+            if (bytes[i] != 32) {
+                normalized += bytes[i].toChar().toString();
+            }
+        }
+
+        return normalized;
+    }
+
+    private function normalizeUnlockCode(code as String) as String {
+        var bytes = code.toLower().toUtf8Array();
+        var normalized = "";
+
+        for (var i = 0; i < bytes.size(); i++) {
+            if (bytes[i] != 32 && bytes[i] != 45) {
+                normalized += bytes[i].toChar().toString();
+            }
+        }
+
+        return normalized;
     }
 
     private function getAccentColor(unlocked as Boolean) as Number {

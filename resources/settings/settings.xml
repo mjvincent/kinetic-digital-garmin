@@ -1,6 +1,10 @@
 <settings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://developer.garmin.com/downloads/connect-iq/resources.xsd">
     <setting propertyKey="@Properties.UnlockCode" title="@Strings.UnlockCodeTitle">
-        <settingConfig type="alphaNumeric" />
+        <settingConfig type="alphaNumeric" maxLength="12" />
+    </setting>
+
+    <setting propertyKey="@Properties.UnlockEmail" title="@Strings.UnlockEmailTitle">
+        <settingConfig type="email" maxLength="80" />
     </setting>
 
     <setting propertyKey="@Properties.AccentColor" title="@Strings.AccentColorTitle">
@@ -9,6 +13,26 @@
             <listEntry value="0x2DD4BF">@Strings.ColorTeal</listEntry>
             <listEntry value="0x60A5FA">@Strings.ColorBlue</listEntry>
             <listEntry value="0xF43F5E">@Strings.ColorRuby</listEntry>
+        </settingConfig>
+    </setting>
+
+    <setting propertyKey="@Properties.ProStat" title="@Strings.ProStatTitle">
+        <settingConfig type="list">
+            <listEntry value="0">@Strings.ProStatSeconds</listEntry>
+            <listEntry value="1">@Strings.ProStatSteps</listEntry>
+            <listEntry value="2">@Strings.ProStatActiveMinutes</listEntry>
+            <listEntry value="3">@Strings.ProStatCalories</listEntry>
+            <listEntry value="4">@Strings.ProStatFloors</listEntry>
+            <listEntry value="5">@Strings.ProStatBattery</listEntry>
+        </settingConfig>
+    </setting>
+
+    <setting propertyKey="@Properties.RingMode" title="@Strings.RingModeTitle">
+        <settingConfig type="list">
+            <listEntry value="0">@Strings.RingModeBattery</listEntry>
+            <listEntry value="1">@Strings.RingModeSteps</listEntry>
+            <listEntry value="2">@Strings.RingModeActiveMinutes</listEntry>
+            <listEntry value="3">@Strings.RingModeDayProgress</listEntry>
         </settingConfig>
     </setting>
 
