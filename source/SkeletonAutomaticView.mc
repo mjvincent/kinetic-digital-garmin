@@ -63,42 +63,53 @@ class SkeletonAutomaticView extends WatchUi.WatchFace {
     }
 
     private function drawSkeletonDial(dc as Dc, cx as Number, cy as Number, radius as Number, accent as Number, detailLevel as Number, unlocked as Boolean) as Void {
-        var outer = radius - scale(radius, 9);
-        var mid = radius - scale(radius, 29);
-        var inner = radius - scale(radius, 67);
+        var outer = radius - scale(radius, 7);
+        var chapter = radius - scale(radius, 31);
+        var movement = radius - scale(radius, 54);
 
-        dc.setPenWidth(scale(radius, 3));
-        dc.setColor(0xC8CED6, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(0x090B0E, 0x090B0E);
+        dc.fillCircle(cx, cy, outer);
+        dc.setColor(0x171B20, 0x171B20);
+        dc.fillCircle(cx, cy, chapter);
+        dc.setColor(0x242A31, 0x242A31);
+        dc.fillCircle(cx, cy, movement);
+
+        dc.setPenWidth(scale(radius, 5));
+        dc.setColor(0x343A42, Graphics.COLOR_TRANSPARENT);
         dc.drawCircle(cx, cy, outer);
+        dc.setPenWidth(scale(radius, 2));
+        dc.setColor(0x08090B, Graphics.COLOR_TRANSPARENT);
+        dc.drawCircle(cx, cy, chapter + scale(radius, 9));
+        dc.drawCircle(cx, cy, chapter);
 
-        dc.setPenWidth(scale(radius, 1));
-        dc.setColor(0x313946, Graphics.COLOR_TRANSPARENT);
-        dc.drawCircle(cx, cy, mid);
-        dc.drawCircle(cx, cy, inner);
+        drawMovementPlate(dc, cx, cy, radius, accent, detailLevel);
+        drawSubDial(dc, cx, cy - scale(radius, 70), scale(radius, 34), accent, "90", "10");
+        drawSubDial(dc, cx + scale(radius, 30), cy + scale(radius, 63), scale(radius, 32), accent, "65", "85");
+        drawDateDisc(dc, cx - scale(radius, 74), cy + scale(radius, 64), scale(radius, 29), unlocked);
 
-        dc.setPenWidth(scale(radius, 4));
-        dc.setColor(0x414956, Graphics.COLOR_TRANSPARENT);
-        drawRadialLine(dc, cx, cy, 315.0, scale(radius, 38), scale(radius, 104));
-        drawRadialLine(dc, cx, cy, 45.0, scale(radius, 38), scale(radius, 104));
-        drawRadialLine(dc, cx, cy, 135.0, scale(radius, 44), scale(radius, 95));
-        drawRadialLine(dc, cx, cy, 225.0, scale(radius, 44), scale(radius, 95));
+        dc.setPenWidth(scale(radius, 5));
+        dc.setColor(0x0E1116, Graphics.COLOR_TRANSPARENT);
+        drawRadialLine(dc, cx, cy, 300.0, scale(radius, 20), scale(radius, 105));
+        drawRadialLine(dc, cx, cy, 64.0, scale(radius, 32), scale(radius, 98));
 
-        drawGear(dc, cx - scale(radius, 43), cy - scale(radius, 18), scale(radius, 26), 10, 0x65707F);
-        drawGear(dc, cx + scale(radius, 45), cy + scale(radius, 18), scale(radius, 22), 9, 0x535D6A);
-        drawOpenHeart(dc, cx, cy + scale(radius, 58), scale(radius, 36), accent, detailLevel);
+        drawGear(dc, cx + scale(radius, 58), cy - scale(radius, 43), scale(radius, 22), 12, 0x6C747F);
+        drawGear(dc, cx + scale(radius, 64), cy + scale(radius, 25), scale(radius, 26), 13, 0x626B77);
+        drawOpenHeart(dc, cx + scale(radius, 67), cy + scale(radius, 64), scale(radius, 31), accent, detailLevel);
 
         if (detailLevel > 0) {
-            drawGear(dc, cx + scale(radius, 34), cy - scale(radius, 53), scale(radius, 17), 8, 0x4E5968);
-            drawGear(dc, cx - scale(radius, 34), cy + scale(radius, 49), scale(radius, 15), 8, 0x4B5562);
+            drawRightBridgework(dc, cx, cy, radius, accent);
+            drawGear(dc, cx - scale(radius, 58), cy - scale(radius, 30), scale(radius, 19), 10, 0x4F5966);
         }
 
         if (detailLevel > 1) {
             drawJewels(dc, cx, cy, radius, accent);
         }
 
+        drawStatusBadge(dc, cx - scale(radius, 73), cy - scale(radius, 50), scale(radius, 18), unlocked);
+
         if (!unlocked) {
             dc.setColor(0x7E8794, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, cy + scale(radius, 91), Graphics.FONT_XTINY, "BASE", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(cx, cy + scale(radius, 100), Graphics.FONT_XTINY, "BASE", Graphics.TEXT_JUSTIFY_CENTER);
         }
     }
 
@@ -106,16 +117,15 @@ class SkeletonAutomaticView extends WatchUi.WatchFace {
         for (var i = 0; i < 60; i++) {
             var major = (i % 5) == 0;
             var angle = (i * 6).toFloat();
-            dc.setPenWidth(major ? scale(radius, 3) : scale(radius, 1));
-            dc.setColor(major ? 0xE5E9F0 : 0x667180, Graphics.COLOR_TRANSPARENT);
-            drawRadialLine(dc, cx, cy, angle, radius - scale(radius, major ? 24 : 16), radius - scale(radius, 8));
+            dc.setPenWidth(major ? scale(radius, 5) : scale(radius, 2));
+            dc.setColor(major ? 0xECEFF3 : 0x5F6874, Graphics.COLOR_TRANSPARENT);
+            drawRadialLine(dc, cx, cy, angle, radius - scale(radius, major ? 32 : 21), radius - scale(radius, 15));
         }
 
-        dc.setColor(accent, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, cy - radius + scale(radius, 31), Graphics.FONT_SMALL, "XII", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(cx + radius - scale(radius, 31), cy - scale(radius, 10), Graphics.FONT_SMALL, "III", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(cx, cy + radius - scale(radius, 46), Graphics.FONT_SMALL, "VI", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(cx - radius + scale(radius, 31), cy - scale(radius, 10), Graphics.FONT_SMALL, "IX", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setPenWidth(scale(radius, 3));
+        dc.setColor(0x2B3038, Graphics.COLOR_TRANSPARENT);
+        drawRadialLine(dc, cx, cy, 0.0, radius - scale(radius, 34), radius - scale(radius, 9));
+        drawRadialLine(dc, cx, cy, 180.0, radius - scale(radius, 34), radius - scale(radius, 9));
     }
 
     private function drawHands(dc as Dc, cx as Number, cy as Number, radius as Number, accent as Number, unlocked as Boolean) as Void {
@@ -124,17 +134,31 @@ class SkeletonAutomaticView extends WatchUi.WatchFace {
         var minuteAngle = (clock.min * 6) + (second / 10.0);
         var hourAngle = ((clock.hour % 12) * 30) + (clock.min / 2.0);
 
-        dc.setPenWidth(scale(radius, 9));
+        dc.setPenWidth(scale(radius, 13));
+        dc.setColor(0x050607, Graphics.COLOR_TRANSPARENT);
+        drawRadialLine(dc, cx, cy, hourAngle, -scale(radius, 8), scale(radius, 57));
+        dc.setPenWidth(scale(radius, 8));
         dc.setColor(0xE9EDF3, Graphics.COLOR_TRANSPARENT);
         drawRadialLine(dc, cx, cy, hourAngle, 0, scale(radius, 55));
+        dc.setPenWidth(scale(radius, 2));
+        dc.setColor(0x050607, Graphics.COLOR_TRANSPARENT);
+        drawRadialLine(dc, cx, cy, hourAngle, scale(radius, 8), scale(radius, 49));
 
+        dc.setPenWidth(scale(radius, 11));
+        dc.setColor(0x050607, Graphics.COLOR_TRANSPARENT);
+        drawRadialLine(dc, cx, cy, minuteAngle, -scale(radius, 12), scale(radius, 88));
         dc.setPenWidth(scale(radius, 6));
         dc.setColor(0xF5F7FA, Graphics.COLOR_TRANSPARENT);
         drawRadialLine(dc, cx, cy, minuteAngle, 0, scale(radius, 81));
+        dc.setPenWidth(scale(radius, 2));
+        dc.setColor(0x050607, Graphics.COLOR_TRANSPARENT);
+        drawRadialLine(dc, cx, cy, minuteAngle, scale(radius, 12), scale(radius, 75));
 
         dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
-        dc.fillCircle(cx, cy, scale(radius, 8));
-        dc.setColor(accent, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(cx, cy, scale(radius, 11));
+        dc.setColor(0xD9DEE6, 0xD9DEE6);
+        dc.fillCircle(cx, cy, scale(radius, 7));
+        dc.setColor(0x69717C, Graphics.COLOR_TRANSPARENT);
         dc.setPenWidth(scale(radius, 2));
         dc.drawCircle(cx, cy, scale(radius, 10));
 
@@ -164,6 +188,87 @@ class SkeletonAutomaticView extends WatchUi.WatchFace {
             drawRadialLine(dc, cx, cy, 90.0, scale(r, 7), r - scale(r, 5));
             drawRadialLine(dc, cx, cy, 270.0, scale(r, 7), r - scale(r, 5));
         }
+    }
+
+    private function drawMovementPlate(dc as Dc, cx as Number, cy as Number, radius as Number, accent as Number, detailLevel as Number) as Void {
+        dc.setPenWidth(scale(radius, 3));
+        dc.setColor(0x373E48, Graphics.COLOR_TRANSPARENT);
+        drawRadialLine(dc, cx, cy, 248.0, scale(radius, 28), scale(radius, 105));
+        drawRadialLine(dc, cx, cy, 288.0, scale(radius, 30), scale(radius, 104));
+        drawRadialLine(dc, cx, cy, 112.0, scale(radius, 35), scale(radius, 103));
+        drawRadialLine(dc, cx, cy, 72.0, scale(radius, 34), scale(radius, 104));
+
+        dc.setPenWidth(scale(radius, 7));
+        dc.setColor(accent, Graphics.COLOR_TRANSPARENT);
+        drawRadialLine(dc, cx, cy, 63.0, scale(radius, 60), scale(radius, 90));
+        drawRadialLine(dc, cx, cy, 116.0, scale(radius, 55), scale(radius, 84));
+
+        dc.setPenWidth(scale(radius, 2));
+        dc.setColor(0x15191F, Graphics.COLOR_TRANSPARENT);
+        dc.drawCircle(cx - scale(radius, 58), cy - scale(radius, 7), scale(radius, 40));
+        dc.drawCircle(cx + scale(radius, 56), cy - scale(radius, 4), scale(radius, 43));
+    }
+
+    private function drawSubDial(dc as Dc, cx as Number, cy as Number, r as Number, accent as Number, leftLabel as String, rightLabel as String) as Void {
+        dc.setColor(0x20252C, 0x20252C);
+        dc.fillCircle(cx, cy, r);
+        dc.setPenWidth(scale(r, 2));
+        dc.setColor(0x434B57, Graphics.COLOR_TRANSPARENT);
+        dc.drawCircle(cx, cy, r);
+        dc.setColor(accent, Graphics.COLOR_TRANSPARENT);
+        dc.drawCircle(cx, cy, r - scale(r, 6));
+
+        dc.setPenWidth(scale(r, 2));
+        dc.setColor(0xB8C0CB, Graphics.COLOR_TRANSPARENT);
+        drawRadialLine(dc, cx, cy, 205.0, 0, r - scale(r, 9));
+        dc.setColor(0xAEB6C2, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx - scale(r, 15), cy - scale(r, 16), Graphics.FONT_XTINY, leftLabel, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx + scale(r, 16), cy - scale(r, 16), Graphics.FONT_XTINY, rightLabel, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, cy + scale(r, 8), Graphics.FONT_XTINY, "50", Graphics.TEXT_JUSTIFY_CENTER);
+    }
+
+    private function drawDateDisc(dc as Dc, cx as Number, cy as Number, r as Number, unlocked as Boolean) as Void {
+        var today = Gregorian.info(Time.now(), Time.FORMAT_SHORT);
+        var text = unlocked && getBool("ShowDate", true) ? today.day.format("%d") : "--";
+
+        dc.setColor(0x2B3038, 0x2B3038);
+        dc.fillCircle(cx, cy, r);
+        dc.setPenWidth(scale(r, 2));
+        dc.setColor(0x3E4651, Graphics.COLOR_TRANSPARENT);
+        dc.drawCircle(cx, cy, r);
+        dc.setColor(0xECEFF3, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, cy - scale(r, 16), Graphics.FONT_MEDIUM, text, Graphics.TEXT_JUSTIFY_CENTER);
+    }
+
+    private function drawStatusBadge(dc as Dc, cx as Number, cy as Number, r as Number, unlocked as Boolean) as Void {
+        dc.setColor(0x303740, 0x303740);
+        dc.fillCircle(cx, cy, r);
+        dc.setColor(0xC8CED7, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, cy - scale(r, 10), Graphics.FONT_XTINY, unlocked ? "BT" : "LK", Graphics.TEXT_JUSTIFY_CENTER);
+    }
+
+    private function drawRightBridgework(dc as Dc, cx as Number, cy as Number, radius as Number, accent as Number) as Void {
+        var bx = cx + scale(radius, 50);
+        var by = cy - scale(radius, 6);
+
+        dc.setPenWidth(scale(radius, 8));
+        dc.setColor(0x11151B, Graphics.COLOR_TRANSPARENT);
+        dc.drawLine(bx - scale(radius, 8), by - scale(radius, 45), bx + scale(radius, 58), by - scale(radius, 55));
+        dc.drawLine(bx - scale(radius, 20), by - scale(radius, 10), bx + scale(radius, 57), by - scale(radius, 21));
+        dc.drawLine(bx - scale(radius, 28), by + scale(radius, 24), bx + scale(radius, 46), by + scale(radius, 7));
+        dc.drawLine(bx - scale(radius, 17), by + scale(radius, 54), bx + scale(radius, 32), by + scale(radius, 30));
+
+        dc.setPenWidth(scale(radius, 4));
+        dc.setColor(0x707884, Graphics.COLOR_TRANSPARENT);
+        dc.drawLine(bx - scale(radius, 8), by - scale(radius, 45), bx + scale(radius, 58), by - scale(radius, 55));
+        dc.drawLine(bx - scale(radius, 20), by - scale(radius, 10), bx + scale(radius, 57), by - scale(radius, 21));
+        dc.drawLine(bx - scale(radius, 28), by + scale(radius, 24), bx + scale(radius, 46), by + scale(radius, 7));
+        dc.drawLine(bx - scale(radius, 17), by + scale(radius, 54), bx + scale(radius, 32), by + scale(radius, 30));
+
+        dc.setColor(accent, accent);
+        dc.fillCircle(bx + scale(radius, 12), by - scale(radius, 38), scale(radius, 5));
+        dc.fillCircle(bx - scale(radius, 8), by + scale(radius, 14), scale(radius, 5));
+        dc.fillCircle(bx + scale(radius, 23), by + scale(radius, 39), scale(radius, 4));
     }
 
     private function drawGear(dc as Dc, cx as Number, cy as Number, r as Number, teeth as Number, color as Number) as Void {
