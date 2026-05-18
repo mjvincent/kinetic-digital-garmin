@@ -90,19 +90,18 @@ class KineticDigitalView extends WatchUi.WatchFace {
     private function drawTime(dc as Dc, cx as Number, cy as Number, radius as Number) as Void {
         var clock = System.getClockTime();
         var hours = clock.hour;
-        var timeFormat = "$1$:$2$";
+        var minutes = clock.min;
+        var useMilitary = getBool("UseMilitaryFormat", false);
 
-        if (!System.getDeviceSettings().is24Hour) {
+        if (!useMilitary && !System.getDeviceSettings().is24Hour) {
             if (hours > 12) {
                 hours = hours - 12;
             } else if (hours == 0) {
                 hours = 12;
             }
-        } else if (getBool("UseMilitaryFormat", false)) {
-            timeFormat = "$1$$2$";
         }
 
-        var timeString = Lang.format(timeFormat, [hours.format("%02d"), clock.min.format("%02d")]);
+        var timeString = Lang.format("$1$:$2$", [hours.format("%02d"), minutes.format("%02d")]);
         dc.setColor(0xF4F7FB, Graphics.COLOR_TRANSPARENT);
         dc.drawText(cx, cy - scale(radius, 62), Graphics.FONT_NUMBER_HOT, timeString, Graphics.TEXT_JUSTIFY_CENTER);
     }
