@@ -1,10 +1,23 @@
 <strings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://developer.garmin.com/downloads/connect-iq/resources.xsd">
     <string id="AppName">Kinetic Digital</string>
     <string id="UnlockCodeTitle">Unlock Code</string>
+    <string id="UnlockEmailTitle">Unlock Email</string>
     <string id="AccentColorTitle">Accent Color</string>
+    <string id="ProStatTitle">Pro Stat</string>
+    <string id="RingModeTitle">Ring Mode</string>
     <string id="MilitaryFormatTitle">Military Format</string>
     <string id="ColorGilt">Gilt</string>
     <string id="ColorTeal">Teal</string>
     <string id="ColorBlue">Blue</string>
     <string id="ColorRuby">Ruby</string>
+    <string id="ProStatSeconds">Seconds</string>
+    <string id="ProStatSteps">Steps</string>
+    <string id="ProStatActiveMinutes">Active Minutes</string>
+    <string id="ProStatCalories">Calories</string>
+    <string id="ProStatFloors">Floors</string>
+    <string id="ProStatBattery">Battery</string>
+    <string id="RingModeBattery">Battery</string>
+    <string id="RingModeSteps">Steps Goal</string>
+    <string id="RingModeActiveMinutes">Active Minutes</string>
+    <string id="RingModeDayProgress">Day Progress</string>
 </strings>
