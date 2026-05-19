@@ -5,9 +5,7 @@
             "name": "Launch Kinetic Digital (fr970)",
             "type": "monkeyc",
             "request": "launch",
-            "prg": "${workspaceFolder}/bin/KineticDigital-fr970.prg",
-            "prgDebugXml": "${workspaceFolder}/bin/KineticDigital-fr970.prg.debug.xml",
-            "settingsJson": "${workspaceFolder}/bin/KineticDigital-fr970-settings.json",
+            "stopAtLaunch": false,
             "device": "fr970"
         }
     ]
