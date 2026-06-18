@@ -1,0 +1,132 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build and Run on Venu 4 45mm",
+            "type": "shell",
+            "command": "monkeyc -d venu445mm -f monkey.jungle -o bin/KineticDigital-venu445mm.prg -y ~/.Garmin/ConnectIQ/developer_key.der && \"/Users/michaelvincentjones/Library/Application Support/Garmin/ConnectIQ/Sdks/connectiq-sdk-mac-9.1.0-2026-03-09-6a872a80b/bin/monkeydo\" bin/KineticDigital-venu445mm.prg venu445mm",
+            "options": {
+                "cwd": "${workspaceFolder}/KineticDigital"
+            },
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        },
+        {
+            "label": "Test with PRO Unlocked (Teal, Steps Ring)",
+            "type": "shell",
+            "command": "\"/Users/michaelvincentjones/Library/Application Support/Garmin/ConnectIQ/Sdks/connectiq-sdk-mac-9.1.0-2026-03-09-6a872a80b/bin/monkeydo\" bin/KineticDigital-venu445mm.prg venu445mm --set UnlockCode=KINETIC-2026 --set AccentColor=0x2DD4BF --set RingMode=1 --set ProStat=1",
+            "options": {
+                "cwd": "${workspaceFolder}/KineticDigital"
+            },
+            "problemMatcher": [],
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        },
+        {
+            "label": "Test with PRO Unlocked (Blue, Active Minutes Ring)",
+            "type": "shell",
+            "command": "\"/Users/michaelvincentjones/Library/Application Support/Garmin/ConnectIQ/Sdks/connectiq-sdk-mac-9.1.0-2026-03-09-6a872a80b/bin/monkeydo\" bin/KineticDigital-venu445mm.prg venu445mm --set UnlockCode=KINETIC-2026 --set AccentColor=0x60A5FA --set RingMode=2 --set ProStat=2",
+            "options": {
+                "cwd": "${workspaceFolder}/KineticDigital"
+            },
+            "problemMatcher": [],
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        },
+        {
+            "label": "Test with PRO Unlocked (Ruby, Day Progress Ring)",
+            "type": "shell",
+            "command": "\"/Users/michaelvincentjones/Library/Application Support/Garmin/ConnectIQ/Sdks/connectiq-sdk-mac-9.1.0-2026-03-09-6a872a80b/bin/monkeydo\" bin/KineticDigital-venu445mm.prg venu445mm --set UnlockCode=KINETIC-2026 --set AccentColor=0xF43F5E --set RingMode=3 --set ProStat=3",
+            "options": {
+                "cwd": "${workspaceFolder}/KineticDigital"
+            },
+            "problemMatcher": [],
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        },
+        {
+            "label": "Test Locked Version (Default Settings)",
+            "type": "shell",
+            "command": "\"/Users/michaelvincentjones/Library/Application Support/Garmin/ConnectIQ/Sdks/connectiq-sdk-mac-9.1.0-2026-03-09-6a872a80b/bin/monkeydo\" bin/KineticDigital-venu445mm.prg venu445mm --set UnlockCode= --set AccentColor=0xC9A45D --set RingMode=0 --set ProStat=0",
+            "options": {
+                "cwd": "${workspaceFolder}/KineticDigital"
+            },
+            "problemMatcher": [],
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        },
+        {
+            "label": "Build and Run on Fenix 8 47mm",
+            "type": "shell",
+            "command": "monkeyc -d fenix847mm -f monkey.jungle -o bin/KineticDigital-fenix847mm.prg -y ~/.Garmin/ConnectIQ/developer_key.der && \"/Users/michaelvincentjones/Library/Application Support/Garmin/ConnectIQ/Sdks/connectiq-sdk-mac-9.1.0-2026-03-09-6a872a80b/bin/monkeydo\" bin/KineticDigital-fenix847mm.prg fenix847mm",
+            "options": {
+                "cwd": "${workspaceFolder}/KineticDigital"
+            },
+            "problemMatcher": [],
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        },
+        {
+            "label": "Build and Run on Forerunner 970",
+            "type": "shell",
+            "command": "monkeyc -d fr970 -f monkey.jungle -o bin/KineticDigital-fr970.prg -y ~/.Garmin/ConnectIQ/developer_key.der && \"/Users/michaelvincentjones/Library/Application Support/Garmin/ConnectIQ/Sdks/connectiq-sdk-mac-9.1.0-2026-03-09-6a872a80b/bin/monkeydo\" bin/KineticDigital-fr970.prg fr970",
+            "options": {
+                "cwd": "${workspaceFolder}/KineticDigital"
+            },
+            "problemMatcher": [],
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        },
+        {
+            "label": "Build Only",
+            "type": "shell",
+            "command": "monkeyc -d venu445mm -f monkey.jungle -o bin/KineticDigital-venu445mm.prg -y ~/.Garmin/ConnectIQ/developer_key.der",
+            "options": {
+                "cwd": "${workspaceFolder}/KineticDigital"
+            },
+            "problemMatcher": [],
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "Launch Simulator GUI",
+            "type": "shell",
+            "command": "\"/Users/michaelvincentjones/Library/Application Support/Garmin/ConnectIQ/Sdks/connectiq-sdk-mac-9.1.0-2026-03-09-6a872a80b/bin/connectiq\" &",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        }
+    ]
+}
+
+// Made with Bob
